@@ -57,6 +57,7 @@ class MenuConsola(
 
             gestor.crear(Prenda(id, nombre, talla, categoria, precio))
         } catch (e: Exception) {
+            LogErrores.registrarError("Error al registrar prenda", e)
             println("Error al registrar la prenda: ${e.message}")
         }
     }
@@ -94,6 +95,7 @@ class MenuConsola(
 
             gestor.actualizar(id, Prenda(id, nombre, talla, categoria, precio, estado))
         } catch (e: Exception) {
+            LogErrores.registrarError("Error al actualizar prenda", e)
             println("Error al actualizar la prenda: ${e.message}")
         }
     }
