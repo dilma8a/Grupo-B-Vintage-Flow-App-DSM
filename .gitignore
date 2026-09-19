@@ -1,1 +1,23 @@
+# Compilación Kotlin/Gradle
+.gradle/
+build/
+out/
+*.class
+
+# Archivos generados
 *.jar
+*.war
+
+# Configuración local de IntelliJ/Android Studio
+.idea/
+*.iml
+
+# Configuración local de Kotlin
+.kotlin/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Variables de entorno
+.env
