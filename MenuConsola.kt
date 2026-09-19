@@ -2,7 +2,8 @@
 // Responsable: Hilda María Martínez de Reyes (MD243315)
 
 class MenuConsola(
-    private val gestor: ModuloGestionPrendas,
+    // Cambiado a GestorCRUD<Prenda> para poder usar el GestorPrendasValidado
+    private val gestor: GestorCRUD<Prenda>,
     private val procesamiento: ModuloProcesamiento
 ) {
 
