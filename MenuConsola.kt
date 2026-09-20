@@ -1,14 +1,12 @@
-// Módulo de interfaz de consola — menú principal y visualización de resultados.
-// Responsable: Hilda María Martínez de Reyes (MD243315)
-
 class MenuConsola(
-    // Cambiado a GestorCRUD<Prenda> para poder usar el GestorPrendasValidado
+    // Tipo GestorCRUD<Prenda> para poder usar GestorPrendasValidado
     private val gestor: GestorCRUD<Prenda>,
-    private val procesamiento: ModuloProcesamiento
+    private val procesamiento: ModuloProcesamiento,
+    private val reporteGenerador: ReporteGenerador // TODO: clase de José David — confirmar nombre del método si difiere de generarReporte()
 ) {
 
     fun iniciar() {
-        var opcion: Int
+        var opcion: Int? = null
         do {
             mostrarMenu()
             opcion = leerOpcion()
@@ -17,8 +15,9 @@ class MenuConsola(
                 2 -> listarPrendas()
                 3 -> actualizarPrenda()
                 4 -> eliminarPrenda()
-                5 -> procesamiento.generarReporte()
+                5 -> reporteGenerador.generarReporte()
                 0 -> println("Saliendo del sistema... ¡Hasta pronto!")
+                null -> println("Entrada inválida. Ingresa un número de opción.")
                 else -> println("Opción inválida. Intenta nuevamente.")
             }
             println()
@@ -37,9 +36,12 @@ class MenuConsola(
     }
 
     // Valida que la entrada sea un número entero antes de continuar.
-    private fun leerOpcion(): Int {
+    // Devuelve null si la entrada no es un número válido, en vez de un
+    // valor "mágico" como -1 (evita reportar -1 como opción inválida
+    // silenciosamente y deja explícito el caso de error).
+    private fun leerOpcion(): Int? {
         val entrada = readLine()
-        return entrada?.toIntOrNull() ?: -1
+        return entrada?.toIntOrNull()
     }
 
     private fun registrarPrenda() {
