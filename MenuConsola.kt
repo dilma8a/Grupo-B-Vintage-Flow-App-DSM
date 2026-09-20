@@ -2,7 +2,7 @@ class MenuConsola(
     // Tipo GestorCRUD<Prenda> para poder usar GestorPrendasValidado
     private val gestor: GestorCRUD<Prenda>,
     private val procesamiento: ModuloProcesamiento,
-    private val reporteGenerador: ReporteGenerador // TODO: clase de José David — confirmar nombre del método si difiere de generarReporte()
+    private val reporteGenerador: ReporteGenerador 
 ) {
 
     fun iniciar() {
@@ -40,8 +40,8 @@ class MenuConsola(
     // valor "mágico" como -1 (evita reportar -1 como opción inválida
     // silenciosamente y deja explícito el caso de error).
     private fun leerOpcion(): Int? {
-        val entrada = readLine()
-        return entrada?.toIntOrNull()
+        val entrada = readLine() ?: return 0
+        return entrada.trim().toIntOrNull()
     }
 
     private fun registrarPrenda() {
@@ -103,9 +103,14 @@ class MenuConsola(
     }
 
     private fun eliminarPrenda() {
-        print("ID de la prenda a eliminar: ")
-        val id = leerTextoObligatorio()
-        gestor.eliminar(id)
+        try {
+            print("ID de la prenda a eliminar: ")
+            val id = leerTextoObligatorio()
+            gestor.eliminar(id)
+        } catch (e: Exception) {
+            LogErrores.registrarError("eliminar prenda", e)
+            println("Error al eliminar la prenda: ${e.message}")
+        }
     }
 
     // --- Utilidades de validación de entrada ---
