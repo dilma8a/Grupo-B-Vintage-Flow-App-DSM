@@ -1,14 +1,12 @@
-// Módulo de interfaz de consola — menú principal y visualización de resultados.
-// Responsable: Hilda María Martínez de Reyes (MD243315)
-
 class MenuConsola(
-    // Cambiado a GestorCRUD<Prenda> para poder usar el GestorPrendasValidado
+    // Tipo GestorCRUD<Prenda> para poder usar GestorPrendasValidado
     private val gestor: GestorCRUD<Prenda>,
-    private val procesamiento: ModuloProcesamiento
+    private val procesamiento: ModuloProcesamiento,
+    private val reporteGenerador: ReporteGenerador // TODO: clase de José David — confirmar nombre del método si difiere de generarReporte()
 ) {
 
     fun iniciar() {
-        var opcion: Int
+        var opcion: Int? = null
         do {
             mostrarMenu()
             opcion = leerOpcion()
@@ -17,8 +15,9 @@ class MenuConsola(
                 2 -> listarPrendas()
                 3 -> actualizarPrenda()
                 4 -> eliminarPrenda()
-                5 -> procesamiento.generarReporte()
+                5 -> reporteGenerador.reporteCompletoTexto()
                 0 -> println("Saliendo del sistema... ¡Hasta pronto!")
+                null -> println("Entrada inválida. Ingresa un número de opción.")
                 else -> println("Opción inválida. Intenta nuevamente.")
             }
             println()
@@ -37,9 +36,12 @@ class MenuConsola(
     }
 
     // Valida que la entrada sea un número entero antes de continuar.
-    private fun leerOpcion(): Int {
+    // Devuelve null si la entrada no es un número válido, en vez de un
+    // valor "mágico" como -1 (evita reportar -1 como opción inválida
+    // silenciosamente y deja explícito el caso de error).
+    private fun leerOpcion(): Int? {
         val entrada = readLine()
-        return entrada?.toIntOrNull() ?: -1
+        return entrada?.toIntOrNull()
     }
 
     private fun registrarPrenda() {
@@ -50,7 +52,7 @@ class MenuConsola(
             val nombre = leerTextoObligatorio()
             print("Talla: ")
             val talla = leerTextoObligatorio()
-            print("Categoría: ")
+            print("Categoría (Camisas, Blusas, Pantalones, Vestidos, Chaquetas, Faldas, Zapatos, Accesorios): ")
             val categoria = leerTextoObligatorio()
             print("Precio: ")
             val precio = leerPrecioValido()
@@ -64,17 +66,22 @@ class MenuConsola(
 
     // Muestra el catálogo con formato tabular legible.
     private fun listarPrendas() {
-        val prendas = gestor.listar()
-        if (prendas.isEmpty()) return
+        try {
+            val prendas = gestor.listar()
+            if (prendas.isEmpty()) return
 
-        println("%-10s %-20s %-6s %-15s %-10s %-12s".format(
-            "ID", "Nombre", "Talla", "Categoría", "Precio", "Estado"
-        ))
-        println("-".repeat(80))
-        for (p in prendas) {
-            println("%-10s %-20s %-6s %-15s $%-9.2f %-12s".format(
-                p.id, p.nombre, p.talla, p.categoria, p.precio, p.estado
+            println("%-10s %-20s %-6s %-15s %-10s %-12s".format(
+                "ID", "Nombre", "Talla", "Categoría", "Precio", "Estado"
             ))
+            println("-".repeat(80))
+            for (p in prendas) {
+                println("%-10s %-20s %-6s %-15s $%-9.2f %-12s".format(
+                    p.id, p.nombre, p.talla, p.categoria, p.precio, p.estado
+                ))
+            }
+        } catch (e: Exception) {
+            LogErrores.registrarError("Error al listar prendas", e)
+            println("Error al listar las prendas: ${e.message}")
         }
     }
 
@@ -86,7 +93,7 @@ class MenuConsola(
             val nombre = leerTextoObligatorio()
             print("Nueva talla: ")
             val talla = leerTextoObligatorio()
-            print("Nueva categoría: ")
+            print("Nueva categoría (Camisas, Blusas, Pantalones, Vestidos, Chaquetas, Faldas, Zapatos, Accesorios): ")
             val categoria = leerTextoObligatorio()
             print("Nuevo precio: ")
             val precio = leerPrecioValido()
@@ -101,9 +108,14 @@ class MenuConsola(
     }
 
     private fun eliminarPrenda() {
-        print("ID de la prenda a eliminar: ")
-        val id = leerTextoObligatorio()
-        gestor.eliminar(id)
+        try {
+            print("ID de la prenda a eliminar: ")
+            val id = leerTextoObligatorio()
+            gestor.eliminar(id)
+        } catch (e: Exception) {
+            LogErrores.registrarError("Error al eliminar prenda", e)
+            println("Error al eliminar la prenda: ${e.message}")
+        }
     }
 
     // --- Utilidades de validación de entrada ---
