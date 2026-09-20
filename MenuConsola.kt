@@ -15,7 +15,7 @@ class MenuConsola(
                 2 -> listarPrendas()
                 3 -> actualizarPrenda()
                 4 -> eliminarPrenda()
-                5 -> reporteGenerador.reporteCompletoTexto()
+                5 -> println(reporteGenerador.reporteCompletoTexto())
                 0 -> println("Saliendo del sistema... ¡Hasta pronto!")
                 null -> println("Entrada inválida. Ingresa un número de opción.")
                 else -> println("Opción inválida. Intenta nuevamente.")

@@ -38,7 +38,7 @@ Tambien se incluyen:
 | `MenuConsola.kt` | Interaccion por consola y operaciones del usuario |
 | `LogErrores.kt` | Escritura de errores en archivos de log |
 | `Main.kt` | Punto de entrada de la aplicacion; inicia `MenuConsola` |
-| `PruebasUnitarias.kt` | Pruebas automatizadas con JUnit 4 |
+| `src/test/kotlin/PruebasUnitarias.kt` | Pruebas automatizadas con JUnit 4 |
 
 ## Reglas de validacion
 
