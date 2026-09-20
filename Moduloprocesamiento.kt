@@ -58,21 +58,4 @@ class ModuloProcesamiento(private val inventario: List<Prenda>) {
         return categorias
     }
 
-    // Imprime en consola el reporte/resumen general del sistema.
-    fun generarReporte() {
-        println("===== REPORTE VINTAGE FLOW =====")
-        println("Prendas registradas: ${inventario.size}")
-        println("Valor total del inventario: $${valorTotalInventario()}")
-        println("Valor de inventario disponible: $${valorInventarioDisponible()}")
-        println("Precio promedio: $${precioPromedio()}")
-        println("Categorías registradas: ${categoriasRegistradas().joinToString(", ")}")
-        println("Distribución por estado:")
-        for ((estado, cantidad) in resumenPorEstado()) {
-            println("  - $estado: $cantidad")
-        }
-        val top = prendaMasCara()
-        if (top != null) {
-            println("Prenda más cara: ${top.nombre} ($${top.precio})")
-        }
-    }
 }
