@@ -38,7 +38,7 @@ class InventarioVacioException(mensaje: String = "No hay prendas registradas en 
 
 object Validador {
 
-    val TALLAS_VALIDAS = setOf("XS", "S", "M", "L", "XL", "XXL", "ÚNICA")
+    val TALLAS_VALIDAS = setOf("XS", "S", "M", "L", "XL", "XXL", "UNICA")
 
     val CATEGORIAS_VALIDAS = setOf(
         "Camisas", "Blusas", "Pantalones", "Vestidos",
