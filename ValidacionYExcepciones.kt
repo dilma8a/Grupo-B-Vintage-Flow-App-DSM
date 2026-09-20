@@ -73,6 +73,16 @@ object Validador {
         }
     }
 
+   // Normaliza mayúsculas/minúsculas ANTES de validar y guardar,
+    // para que "m" y "M" no se cuenten como tallas distintas.
+    fun normalizar(prenda: Prenda) {
+        prenda.talla = prenda.talla.trim().uppercase()
+        prenda.estado = prenda.estado.trim().uppercase()
+        prenda.categoria = CATEGORIAS_VALIDAS
+            .firstOrNull { it.equals(prenda.categoria.trim(), ignoreCase = true) }
+            ?: prenda.categoria.trim()
+    }
+
     fun validarIdNoDuplicado(id: String, inventarioActual: List<Prenda>) {
         if (inventarioActual.any { it.id == id }) {
             throw ProductoDuplicadoException(id)
@@ -103,7 +113,8 @@ class GestorPrendasValidado(
     private val gestorReal: GestorCRUD<Prenda>
 ) : GestorCRUD<Prenda> {
 
-    override fun crear(item: Prenda) {
+   override fun crear(item: Prenda) {
+        Validador.normalizar(item)
         Validador.validarPrenda(item, gestorReal.listar(), esNueva = true)
         gestorReal.crear(item)
     }
@@ -111,9 +122,9 @@ class GestorPrendasValidado(
     override fun listar(): List<Prenda> = gestorReal.listar()
 
     override fun actualizar(id: String, itemActualizado: Prenda): Boolean {
+        Validador.normalizar(itemActualizado)
         Validador.validarPrenda(itemActualizado, gestorReal.listar(), esNueva = false)
         return gestorReal.actualizar(id, itemActualizado)
     }
-
     override fun eliminar(id: String): Boolean = gestorReal.eliminar(id)
 }
