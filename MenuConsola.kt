@@ -52,7 +52,7 @@ class MenuConsola(
             val nombre = leerTextoObligatorio()
             print("Talla: ")
             val talla = leerTextoObligatorio()
-            print("Categoría: ")
+            print("Categoría (Camisas, Blusas, Pantalones, Vestidos, Chaquetas, Faldas, Zapatos, Accesorios): ")
             val categoria = leerTextoObligatorio()
             print("Precio: ")
             val precio = leerPrecioValido()
@@ -66,17 +66,22 @@ class MenuConsola(
 
     // Muestra el catálogo con formato tabular legible.
     private fun listarPrendas() {
-        val prendas = gestor.listar()
-        if (prendas.isEmpty()) return
+        try {
+            val prendas = gestor.listar()
+            if (prendas.isEmpty()) return
 
-        println("%-10s %-20s %-6s %-15s %-10s %-12s".format(
-            "ID", "Nombre", "Talla", "Categoría", "Precio", "Estado"
-        ))
-        println("-".repeat(80))
-        for (p in prendas) {
-            println("%-10s %-20s %-6s %-15s $%-9.2f %-12s".format(
-                p.id, p.nombre, p.talla, p.categoria, p.precio, p.estado
+            println("%-10s %-20s %-6s %-15s %-10s %-12s".format(
+                "ID", "Nombre", "Talla", "Categoría", "Precio", "Estado"
             ))
+            println("-".repeat(80))
+            for (p in prendas) {
+                println("%-10s %-20s %-6s %-15s $%-9.2f %-12s".format(
+                    p.id, p.nombre, p.talla, p.categoria, p.precio, p.estado
+                ))
+            }
+        } catch (e: Exception) {
+            LogErrores.registrarError("Error al listar prendas", e)
+            println("Error al listar las prendas: ${e.message}")
         }
     }
 
@@ -88,7 +93,7 @@ class MenuConsola(
             val nombre = leerTextoObligatorio()
             print("Nueva talla: ")
             val talla = leerTextoObligatorio()
-            print("Nueva categoría: ")
+            print("Nueva categoría (Camisas, Blusas, Pantalones, Vestidos, Chaquetas, Faldas, Zapatos, Accesorios): ")
             val categoria = leerTextoObligatorio()
             print("Nuevo precio: ")
             val precio = leerPrecioValido()
@@ -108,7 +113,7 @@ class MenuConsola(
             val id = leerTextoObligatorio()
             gestor.eliminar(id)
         } catch (e: Exception) {
-            LogErrores.registrarError("eliminar prenda", e)
+            LogErrores.registrarError("Error al eliminar prenda", e)
             println("Error al eliminar la prenda: ${e.message}")
         }
     }
